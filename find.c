@@ -17,7 +17,6 @@
 #include <stdlib.h>
 
 #include "helpers.h"
-
 // maximum amount of hay
 const int MAX = 65536;
 
@@ -53,6 +52,7 @@ int main(int argc, string argv[])
 
     // sort the haystack
     sort(haystack, size);
+    print(haystack,size);
 
     // try to find needle in haystack
     if (search(needle, haystack, size))
