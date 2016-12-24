@@ -24,17 +24,17 @@
 
 int main(int argc, string argv[])
 {
-    // TODO: comment me
+    // main function when executed it asks for arguments to be passed
     if (argc != 2 && argc != 3)
     {
         printf("Usage: generate n [s]\n");
         return 1;
     }
 
-    // TODO: comment me
-    int n = atoi(argv[1]);
+    // checks whether the number of arguments is equal to 2 or 3
+    int n = atoi(argv[1]); 
 
-    // TODO: comment me
+    // converts the 2nd argument from string to integer. It is the number of random numbers to be generated
     if (argc == 3)
     {
         srand48((long int) atoi(argv[2]));
@@ -44,7 +44,7 @@ int main(int argc, string argv[])
         srand48((long int) time(NULL));
     }
 
-    // TODO: comment me
+    // srand48 is an initialization function which sets the higher order 32 bits of the random number to the 3rd argument or seed valu
     for (int i = 0; i < n; i++)
     {
         printf("%i\n", (int) (drand48() * LIMIT));
