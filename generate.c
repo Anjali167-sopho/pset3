@@ -44,7 +44,7 @@ int main(int argc, string argv[])
         srand48((long int) time(NULL));
     }
 
-    // srand48 is an initialization function which sets the higher order 32 bits of the random number to the 3rd argument or seed valu
+    // srand48 is an initialization function which sets the higher order 32 bits of the random number to the 3rd argument or seed value
     for (int i = 0; i < n; i++)
     {
         printf("%i\n", (int) (drand48() * LIMIT));
