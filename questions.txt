@@ -1,8 +1,10 @@
-File Edit Options Buffers Tools Help                                                                                                                                   
-1. TODO                                                                                                                                                                
-2. TODO                                                                                                                                                                
-3. TODO
+questions.txt
 
+Computer Science 50
+Problem Set 3
 
+0. Any dimension between 3*3 and 9*9
+1. array
+2. void greet(void)
+3. init ,draw, move, won.
 
--UU-:----F1  questions.txt   Bot L9     (Text) ------------------------------------------------------------------------------------------------------------------------
