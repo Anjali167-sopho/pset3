@@ -167,7 +167,6 @@ void init(void)
         {
             borad[i][j]=(d*d)-c;
             c++;
-            
         }
     }
     if(d%2==0)
