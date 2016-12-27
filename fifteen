@@ -160,17 +160,20 @@ void greet(void)
 void init(void)
 {
     // TODO
-    int i,j,c=-1;
+    int i,j,c=1;
     for (i=0;i<d;i++)
     {
         for(j=0;j<d;j++)
         {
             borad[i][j]=(d*d)-c;
+            c++;
+            
         }
-        if (i==d&&j==d)
-        {
-            board[i][j]= d*d;
-        }
+    }
+    if(d%2==0)
+    {
+        board[i-1][j-3]=1;
+        board[i-1][j-2]=2;
     }
 }
 
@@ -205,7 +208,28 @@ void draw(void)
 bool move(int tile)
 {
     // TODO
-    return false;
+    int i,j,x,y;
+    for(i=0;i<d;i++)
+    {
+        for(j=0;j<d;j++)
+        {
+            if(board[i][j]==tile)
+            {
+                x=i;
+                y=j;
+                break;
+            }
+        }
+    }
+    if(board[x+1][y+1]==0 || board[x+1][y]==0 ||board[x][y+1]==0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    
 }
 
 /**
