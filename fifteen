@@ -81,20 +81,6 @@ int main(int argc, string argv[])
         draw();
 
         // log the current state of the board (for testing)
-        for (int i = 0; i < d; i++)
-        {
-            for (int j = 0; j < d; j++)
-            {
-                fprintf(file, "%i", board[i][j]);
-                if (j < d - 1)
-                {
-                    fprintf(file, "|");
-                }
-            }
-            fprintf(file, "\n");
-        }
-        fflush(file);
-
         // check for win
         if (won())
         {
@@ -111,10 +97,6 @@ int main(int argc, string argv[])
         {
             break;
         }
-
-        // log move (for testing)
-        fprintf(file, "%i\n", tile);
-        fflush(file);
 
         // move if possible, else report illegality
         if (!move(tile))
@@ -171,8 +153,8 @@ void init(void)
     }
     if(d%2==0)
     {
-        board[i-1][j-3]=1;
-        board[i-1][j-2]=2;
+        board[d-1][d-3]=1;
+        board[d-1][d-2]=2;
     }
 }
 
@@ -187,13 +169,13 @@ void draw(void)
     {
         for(j=0;j<d;j++)
         {
-            if(i==d && j==d)
+            if(board[i][j]==0)
             {
-                printf("_ \n");
+                printf("_");
             }
             else
             {
-                printf("%d ",board[i][j]);
+                printf("%2d ",board[i][j]);
             }
         }
         printf("\n");
@@ -207,7 +189,8 @@ void draw(void)
 bool move(int tile)
 {
     // TODO
-    int i,j,x,y;
+    int i,j,x,y,k,nx,ny,cp=0,c=0;
+    int temp;
     for(i=0;i<d;i++)
     {
         for(j=0;j<d;j++)
@@ -216,12 +199,46 @@ bool move(int tile)
             {
                 x=i;
                 y=j;
+                c=1;
                 break;
             }
         }
     }
-    if(board[x+1][y+1]==0 || board[x+1][y]==0 ||board[x][y+1]==0)
+    if(c==1)
     {
+        for(k=-1;k<=1;k++)
+        {
+            if(board[x+k][y+k]==0)
+            {
+                nx=x+k;
+                ny=y+k;
+                cp=1;
+                break;
+            }
+            else if(board[x][y+k]==0)
+           {
+                nx=x;
+                ny=y+k;
+                cp=1;
+                break;
+           }
+           else if(board[x+k][y]==0)
+           {
+                nx=x+k;
+                ny=j;
+                cp=1;
+                break;
+           }
+        }
+        
+    }
+    if(cp==1)
+    {
+        temp=board[x][y];
+        board[nx][ny]=temp;
+        board[x][y]=0;
+        nx=x;
+        ny=y;
         return true;
     }
     else
@@ -238,5 +255,29 @@ bool move(int tile)
 bool won(void)
 {
     // TODO
-    return false;
+    int i,j;
+    int c=0,p=1;
+    for (i=0;i<d;i++)
+    {
+        for(j=0;j<d;j++)
+        {
+            if(i!=(d-1) && j!=(d-1))
+            {
+                if(board[i][j]!=p)
+                {
+                    c=1;
+                    break;
+                }
+            }
+            p=p+1;
+        }
+    }
+    if(c==1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
