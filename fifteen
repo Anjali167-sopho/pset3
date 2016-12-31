@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 // constants
 #define MIN 3
 #define MAX 9
@@ -39,64 +38,101 @@ void init(void);
 void draw(void);
 bool move(int tile);
 bool won(void);
-
 int main(int argc, string argv[])
 {
-        // greet player
-        greet();
+    // ensure proper usage
+    if (argc != 2)
+    {
+        printf("Usage: fifteen d\n");
+        return 1;
+    }
 
-        // ensure proper usage
-        if (argc != 2)
+    // ensure valid dimensions
+    d = atoi(argv[1]);
+    if (d < MIN || d > MAX)
+    {
+        printf("Board must be between %i x %i and %i x %i, inclusive.\n",
+            MIN, MIN, MAX, MAX);
+        return 2;
+    }
+
+    // open log
+    FILE* file = fopen("log.txt", "w");
+    if (file == NULL)
+    {
+        return 3;
+    }
+
+    // greet user with instructions
+    greet();
+
+    // initialize the board
+    init();
+
+    // accept moves until game is won
+    while (true)
+    {
+        // clear the screen
+        clear();
+
+        // draw the current state of the board
+        draw();
+
+        // log the current state of the board (for testing)
+        for (int i = 0; i < d; i++)
         {
-                printf("Usage: ./fifteen d\n");
-                return 1;
-        }
-
-        // ensure valid dimensions
-        d = atoi(argv[1]);
-        if (d < MIN || d > MAX)
-        {
-                printf("Board must be between %i x %i and %i x %i, inclusive.\n",
-                       MIN, MIN, MAX, MAX);
-                return 2;
-        }
-
-        // initialize the board
-        init();
-
-        // accept moves until game is won
-        while (true)
-        {
-                // clear the screen
-                clear();
-                // draw the current state of the board
-                draw();
-
-                // check for win
-                if (won())
+            for (int j = 0; j < d; j++)
+            {
+                fprintf(file, "%i", board[i][j]);
+                if (j < d - 1)
                 {
-                        printf("ftw!\n");
-                        break;
+                    fprintf(file, "|");
                 }
+            }
+            fprintf(file, "\n");
+        }
+        fflush(file);
 
-                // prompt for move
-                printf("Tile to move: ");
-                int tile = GetInt();
-
-                // move if possible, else report illegality
-                if (!move(tile))
-                {
-                        printf("\nIllegal move.\n");
-                        usleep(500000);
-                }
-
-                // sleep for animation's sake
-                usleep(500000);
+        // check for win
+        if (won())
+        {
+            printf("ftw!\n");
+            break;
         }
 
-        // that's all folks
-        return 0;
+        // prompt for move
+        printf("Tile to move: ");
+        int tile = GetInt();
+        
+        // quit if user inputs 0 (for testing)
+        if (tile == 0)
+        {
+            break;
+        }
+
+        // log move (for testing)
+        fprintf(file, "%i\n", tile);
+        fflush(file);
+
+        // move if possible, else report illegality
+        if (!move(tile))
+        {
+            printf("\nIllegal move.\n");
+            usleep(500000);
+        }
+
+        // sleep thread for animation's sake
+        usleep(500000);
+    }
+    
+    // close log
+    fclose(file);
+
+    // success
+    return 0;
 }
+
+
 
 /**
  * Clears screen using ANSI escape sequences.
@@ -179,8 +215,8 @@ void draw(void)
 bool move(int tile)
 {
     // TODO
-    int i,j,x,y,k,nx,ny,cp=0,c=0;
-    int temp;
+    int i,j,x,y,c=0;
+    int tmp;
     if (tile > ((d * d) - 1)) 
     {
         return false;
@@ -198,41 +234,36 @@ bool move(int tile)
             }
         }
     }
-    if(c==1)
+    tmp=board[x][y];
+    if (x> 0 && board[x-1][y] == 0)
+    { //up
+                //Swap blank tile and input tile
+                board[x][y] = board[x-1][y];
+                board[x-1][y] = tmp;
+                return true;
+    } 
+    else if (x <= d-2 && board[x+1][y] == 0)
+    { //down
+                board[x][y] = board[x+1][y];
+                board[x+1][y] = tmp;
+                return true;
+    } 
+    else if (y > 0 && board[x][y-1] == 0)
+    { //left
+                board[x][y] = board[x][y-1];
+                board[x][y-1] = tmp;
+                return true;
+     } 
+     else if (y <= d-2 && board[x][y+1] == 0) 
+     { //right
+                board[x][y] = board[x][y+1];
+                board[x][y + 1] = tmp;
+                return true;
+    } 
+    else 
     {
-        for(k=-1;k<=1;k=k+2)
-        {
-           if(board[x][y+k]==0)
-           {
-                nx=x;
-                ny=y+k;
-                cp=1;
-                break;
-           }
-           else if(board[x+k][y]==0)
-           {
-                nx=x+k;
-                ny=j;
-                cp=1;
-                break;
-           }
-        }
-        
+                return false;
     }
-    if(cp==1)
-    {
-        temp=board[x][y];
-        board[nx][ny]=temp;
-        board[x][y]=0;
-        nx=x;
-        ny=y;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    
 }
 
 /**
@@ -261,10 +292,10 @@ bool won(void)
     }
     if(c==1)
     {
-        return true;
+        return false;
     }
     else
     {
-        return false;
+        return true;
     }
 }
